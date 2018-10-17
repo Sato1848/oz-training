@@ -14,7 +14,7 @@ public class MediaMapper {
 
 	public static void main(String[] args) {
 
-		String path = "/training/media_mst.csv";
+		String path = "/training/media_mst.csv"; //読み込むファイルのパス
 		mapDatas(path);
 
 	}
@@ -25,8 +25,8 @@ public class MediaMapper {
 		try (BufferedReader br = Files.newBufferedReader(filePath)) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
-		        String[] elems = line.split(",");
-		        mediaMap.put(elems[0], elems[1]);
+		        String[] elems = line.split(","); //カンマで分割
+		        mediaMap.put(elems[0], elems[1]); //媒体コードをkey、媒体名をvalueとしてマップに格納
 
 		    }
 		} catch (IOException e) {
