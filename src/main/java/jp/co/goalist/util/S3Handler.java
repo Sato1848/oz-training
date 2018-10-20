@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3Object;
@@ -18,7 +17,7 @@ public class S3Handler {
 		String region = "ap-northeast-1"; //リージョン
         String bucketName = "goalist-dev-sandbox"; //バケット名
         String keyName = "oz-training/media_mst.csv"; //オブジェクトキー
-        String dest = "/training/media_mst2.csv"; //ダウンロード先のファイルパス
+        String dest = "/training/media_mst.csv"; //ダウンロード先のファイルパス
         
         downloadObject(region, keyName, bucketName, dest); 
        
@@ -30,7 +29,6 @@ public class S3Handler {
 		 System.out.format("Downloading %s from S3 bucket %s...\n", keyName, bucketName);
 	        AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 	                .withRegion(region) //リージョンをセット
-	                .withCredentials(new ProfileCredentialsProvider())
 	                .build();
 
 	        try {
