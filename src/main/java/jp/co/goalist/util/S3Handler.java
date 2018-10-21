@@ -16,7 +16,7 @@ public class S3Handler {
 
 		String region = "ap-northeast-1"; //リージョン
         String bucketName = "bucket_name"; //バケット名
-        String keyName = "object_name"; //オブジェクトキー
+        String keyName = "object_key"; //オブジェクトキー
         String dest = "/training/media_mst.csv"; //ダウンロード先のファイルパス
 
         downloadObject(region, keyName, bucketName, dest);
