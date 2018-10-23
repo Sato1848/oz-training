@@ -16,15 +16,22 @@ public class MediaMapper {
 	static Map<String,String> mediaMap = new HashMap<>();
 
 	public static void main(String[] args) throws IOException {
-		
+
 		S3Handler handler = new S3Handler("ap-northeast-1");
+
+		//マスタをダウンロード
 		Path master = handler.downloadObject("oz-training/media_mst.csv", "goalist-dev-sandbox", "/training/media_mst.csv");
+
+		//マスタをあてる対象ファイルをダウンロード
 		Path target = handler.downloadObject("oz-training/map_training.csv", "goalist-dev-sandbox", "/training/map_training.csv");
+
+		//出力するファイルのパス
 		Path output = Paths.get("/training/map_training01.csv");
-		
-		mapDatas(master);
-		correctMediaNames(target,output);
-		
+
+		mapDatas(master); //マスタの媒体名をマップに格納
+		correctMediaNames(target,output); //マスタをあてる
+
+		//マスタをあてたファイルのアップロード
 		handler.uploadObject("oz-training/upload-test/map_training01.csv", "goalist-dev-sandbox",  output.toString());
 	}
 
@@ -61,9 +68,9 @@ public class MediaMapper {
 
 		    	bw.write(correctedLine);
 			    bw.newLine();
-			    
+
 		    }
-		    
+
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}

@@ -14,9 +14,9 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
 public class S3Handler {
-	
+
 	private static AmazonS3 s3Client;
-	
+
 	public S3Handler(String region){
 		S3Handler.s3Client = AmazonS3ClientBuilder.standard()
                 .withRegion(region) //リージョンをセット
@@ -27,7 +27,7 @@ public class S3Handler {
 	public Path downloadObject(String keyName, String bucketName, String dest) {
 
 		 System.out.format("Downloading %s from S3 bucket %s...\n", keyName, bucketName);
-	     
+
 	     try {
 	         S3Object o = S3Handler.s3Client.getObject(bucketName, keyName);
 	         S3ObjectInputStream s3is = o.getObjectContent();
@@ -49,19 +49,17 @@ public class S3Handler {
 	         System.err.println(e.getMessage());
              System.exit(1);
 	     }
-	     
+
 	     System.out.println("Done!");
 	     Path path = Paths.get(dest);
 	     return path;
 	}
-	
-	
+
+
 	public void uploadObject(String keyName, String bucketName, String dest) {
-		
-		
-		
+
         System.out.format("Uploading %s to S3 bucket %s...\n", dest, bucketName);
-       
+
         try {
             S3Handler.s3Client.putObject(bucketName, keyName, new File(dest));
         } catch (AmazonServiceException e) {
