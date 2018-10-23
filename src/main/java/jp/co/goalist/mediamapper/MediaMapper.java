@@ -20,10 +20,10 @@ public class MediaMapper {
 		S3Handler handler = new S3Handler("ap-northeast-1");
 
 		//マスタをダウンロード
-		Path master = handler.downloadObject("oz-training/media_mst.csv", "goalist-dev-sandbox", "/training/media_mst.csv");
+		Path master = handler.downloadObject("keyName", "bucketName", "/training/media_mst.csv");
 
 		//マスタをあてる対象ファイルをダウンロード
-		Path target = handler.downloadObject("oz-training/map_training.csv", "goalist-dev-sandbox", "/training/map_training.csv");
+		Path target = handler.downloadObject("keyName", "bucketName", "/training/map_training.csv");
 
 		//出力するファイルのパス
 		Path output = Paths.get("/training/map_training01.csv");
@@ -32,7 +32,7 @@ public class MediaMapper {
 		correctMediaNames(target,output); //マスタをあてる
 
 		//マスタをあてたファイルのアップロード
-		handler.uploadObject("oz-training/upload-test/map_training01.csv", "goalist-dev-sandbox",  output.toString());
+		handler.uploadObject("keyName", "bucketName",  output.toString());
 	}
 
 	private static void mapDatas(Path master){

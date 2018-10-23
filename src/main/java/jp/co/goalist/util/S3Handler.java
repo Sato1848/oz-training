@@ -56,12 +56,12 @@ public class S3Handler {
 	}
 
 
-	public void uploadObject(String keyName, String bucketName, String dest) {
+	public void uploadObject(String keyName, String bucketName, String up) {
 
-        System.out.format("Uploading %s to S3 bucket %s...\n", dest, bucketName);
+        System.out.format("Uploading %s to S3 bucket %s...\n", up, bucketName);
 
         try {
-            S3Handler.s3Client.putObject(bucketName, keyName, new File(dest));
+            S3Handler.s3Client.putObject(bucketName, keyName, new File(up));
         } catch (AmazonServiceException e) {
             System.err.println(e.getErrorMessage());
             System.exit(1);
