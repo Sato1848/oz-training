@@ -6,33 +6,32 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import jp.co.goalist.util.S3Handler;
 
 public class MediaMapper {
 
 	static Map<String,String> mediaMap = new HashMap<>();
-	static List<String> outputList = new ArrayList<>();
 
 	public static void main(String[] args) throws IOException {
-
-		String master = "/training/media_mst.csv"; //マスタのパス
+		
+		S3Handler handler = new S3Handler("ap-northeast-1");
+		Path master = handler.downloadObject("oz-training/media_mst.csv", "goalist-dev-sandbox", "/training/media_mst.csv");
+		Path target = handler.downloadObject("oz-training/map_training.csv", "goalist-dev-sandbox", "/training/map_training.csv");
+		Path output = Paths.get("/training/map_training01.csv");
+		
 		mapDatas(master);
-
-		String target = "/training/map_training.csv"; //マスタをあてるファイルのパス
-		String output = "/training/map_training01.csv"; //出力先のパス
-		correctMediaNames(target, output);
-
-
+		correctMediaNames(target,output);
+		
+		handler.uploadObject("oz-training/upload-test/map_training01.csv", "goalist-dev-sandbox",  output.toString());
 	}
 
-	private static void mapDatas(String master){
+	private static void mapDatas(Path master){
 
-		Path masterPath = Paths.get(master);
 
-		try (BufferedReader br = Files.newBufferedReader(masterPath)) {
+		try (BufferedReader br = Files.newBufferedReader(master)) {
 		    String line = br.readLine(); //1行目はとばす
 		    while ((line = br.readLine()) != null) {
 		        String[] elems = line.split(","); //カンマで分割
@@ -44,17 +43,14 @@ public class MediaMapper {
 		}
 	}
 
-	private static void correctMediaNames(String target, String output) throws IOException {
+	private static void correctMediaNames(Path target, Path output) throws IOException {
 
-		Path targetPath = Paths.get(target);
-		Path outputPath = Paths.get(output);
-
-		Files.deleteIfExists(outputPath);
-		Files.createFile(outputPath);
+		Files.deleteIfExists(output);
+		Files.createFile(output);
 
 
-		try (BufferedReader br = Files.newBufferedReader(targetPath);
-		    BufferedWriter bw = Files.newBufferedWriter(outputPath)) {
+		try (BufferedReader br = Files.newBufferedReader(target);
+		    BufferedWriter bw = Files.newBufferedWriter(output)) {
 			String correctedLine = null;
 		    String line;
 		    while ((line = br.readLine()) != null) {
@@ -65,7 +61,9 @@ public class MediaMapper {
 
 		    	bw.write(correctedLine);
 			    bw.newLine();
+			    
 		    }
+		    
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
