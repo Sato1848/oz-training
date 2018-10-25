@@ -15,10 +15,10 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
 public class S3Handler {
 
-	private static AmazonS3 s3Client;
+	private AmazonS3 s3Client;
 
 	public S3Handler(String region){
-		S3Handler.s3Client = AmazonS3ClientBuilder.standard()
+		this.s3Client = AmazonS3ClientBuilder.standard()
                 .withRegion(region) //リージョンをセット
                 .build();
 
@@ -29,7 +29,7 @@ public class S3Handler {
 		 System.out.format("Downloading %s from S3 bucket %s...\n", keyName, bucketName);
 
 	     try {
-	         S3Object o = S3Handler.s3Client.getObject(bucketName, keyName);
+	         S3Object o = this.s3Client.getObject(bucketName, keyName);
 	         S3ObjectInputStream s3is = o.getObjectContent();
 	         FileOutputStream fos = new FileOutputStream(new File(dest));
 	         byte[] read_buf = new byte[1024];
@@ -61,7 +61,7 @@ public class S3Handler {
         System.out.format("Uploading %s to S3 bucket %s...\n", up, bucketName);
 
         try {
-            S3Handler.s3Client.putObject(bucketName, keyName, new File(up));
+            this.s3Client.putObject(bucketName, keyName, new File(up));
         } catch (AmazonServiceException e) {
             System.err.println(e.getErrorMessage());
             System.exit(1);
