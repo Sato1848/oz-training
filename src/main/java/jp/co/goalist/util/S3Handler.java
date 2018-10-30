@@ -25,7 +25,7 @@ public class S3Handler {
 
     public Path downloadObject(String keyName, String bucketName, String dest) throws IOException {
 
-         System.out.format("Downloading %s from S3 bucket %s...\n", keyName, bucketName);
+        System.out.format("Downloading %s from S3 bucket %s...\n", keyName, bucketName);
 
 
         S3Object o = this.s3Client.getObject(bucketName, keyName);
