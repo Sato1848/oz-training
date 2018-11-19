@@ -1,6 +1,7 @@
 package jp.co.goalist.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -23,7 +24,7 @@ public class S3Handler {
 
     }
 
-    public Path downloadObject(String keyName, String bucketName, String dest) throws IOException {
+    public Path downloadObject(String keyName, String bucketName, String dest) throws AmazonServiceException, FileNotFoundException, IOException {
 
         System.out.format("Downloading %s from S3 bucket %s...\n", keyName, bucketName);
 
@@ -39,23 +40,16 @@ public class S3Handler {
         s3is.close();
         fos.close();
 
-
         System.out.println("Done!");
         Path path = Paths.get(dest);
         return path;
     }
 
 
-    public void uploadObject(String keyName, String bucketName, String up) {
+    public void uploadObject(String keyName, String bucketName, String up) throws AmazonServiceException{
 
         System.out.format("Uploading %s to S3 bucket %s...\n", up, bucketName);
-
-        try {
-            this.s3Client.putObject(bucketName, keyName, new File(up));
-        } catch (AmazonServiceException e) {
-            System.err.println(e.getErrorMessage());
-            System.exit(1);
-        }
+        this.s3Client.putObject(bucketName, keyName, new File(up));
         System.out.println("Done!");
     }
 

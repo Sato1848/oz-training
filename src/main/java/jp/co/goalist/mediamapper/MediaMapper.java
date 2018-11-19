@@ -12,31 +12,37 @@ import java.util.Map;
 
 import com.amazonaws.AmazonServiceException;
 
+import jp.co.goalist.util.FileUtil;
 import jp.co.goalist.util.S3Handler;
 
 public class MediaMapper {
 
     static Map<String,String> mediaMap = new HashMap<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         try {
             S3Handler handler = new S3Handler("ap-northeast-1");
 
             //マスタをダウンロード
-            Path master = handler.downloadObject("keyName", "bucketName", "/training/media_mst.csv");
+            Path master = handler.downloadObject("oz-training/media_mst.csv", "goalist-dev-sandbox", "/training/media_mst.csv");
 
-            //マスタをあてる対象ファイルをダウンロード
-            Path target = handler.downloadObject("keyName", "bucketName", "/training/map_training.csv");
+            //マスタをあてる対象zipファイルをダウンロード
+            Path targetZip = handler.downloadObject("oz-training/map_training.csv.zip", "goalist-dev-sandbox", "/training/map_training.csv.zip");
+
+            //zipファイルを解凍
+            Path decompressed = FileUtil.decompressZip(targetZip, "training");
 
             //出力するファイルのパス
             Path output = Paths.get("/training/map_training01.csv");
 
             mapDatas(master); //マスタの媒体名をマップに格納
-            correctMediaNames(target,output); //マスタをあてる
+            correctMediaNames(decompressed,output); //マスタをあてる
+
+            String zipFile = FileUtil.createZip(output, "/training/map_training01.csv.zip");
 
             //マスタをあてたファイルのアップロード
-            handler.uploadObject("keyName", "bucketName",  output.toString());
+            handler.uploadObject("oz-training/upload-test/map_training01.csv", "goalist-dev-sandbox", zipFile);
 
         } catch (AmazonServiceException e) {
              System.err.println(e.getErrorMessage());
