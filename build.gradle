@@ -46,3 +46,9 @@ dependencies {
     // AWS SDK module
     compile 'com.amazonaws:aws-java-sdk-s3'
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'MediaMapper'
+    }
+}
